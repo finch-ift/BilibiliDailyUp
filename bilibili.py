@@ -1,5 +1,6 @@
 """
-core function for scripts
+cron: 30 8 * * *
+new Env('哔哩哔哩每日任务脚本');
 """
 
 import requests
