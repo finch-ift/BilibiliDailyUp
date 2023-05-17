@@ -34,7 +34,7 @@ UID_LIST = ['473837611', '1131457022', '433587902', '2026561407', '50329118']
 # 获取UID的方法见README.md
 # 新华网 人民日报 央视频  王冰冰 英雄联盟赛事
 
-COOKIE_LIST = [r"buvid3=D1ACFB1D-22B4-C45B-93AD-50972173BE9A00986infoc; b_nut=1670735100; i-wanna-go-back=-1; _uuid=733B8539-6AA6-9C17-C993-D38B34D58C2601662infoc; buvid4=56B1D2BB-52DC-648C-03DD-1D4FBDD764A002140-022121113-ikWyhF/Q7Qu8C42fqWspQg%3D%3D; fingerprint=3c13d6f122bfaccce7d307e32af43be3; buvid_fp_plain=undefined; DedeUserID=1123339696; DedeUserID__ckMd5=8f8ba19f1d2e2a88; buvid_fp=1c8b301ae73ea876d6388bac35ab4cbd; b_ut=5; CURRENT_FNVAL=4048; rpdid=|(YYllR~l~J0J'uY~kJu|JY); PVID=1; hit-new-style-dyn=0; hit-dyn-v2=1; CURRENT_QUALITY=0; innersign=0; b_lsid=4F4B4E2E_18823B71E7B; FEED_LIVE_VERSION=V_LIVE_2; header_theme_version=CLOSE; SESSDATA=97fcf565%2C1699778384%2C7f218%2A52; bili_jct=6586f7d9e69a80f4d671cf3822ce0aba; sid=ercqnbkv; home_feed_column=4; browser_resolution=1151-944"]
+COOKIE_LIST = [r"aaa"]
 # Bilibili的COOKIE获取的方法见README.md 支持多账号
 
 class Bilibili:
