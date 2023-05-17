@@ -7,13 +7,35 @@ import random
 import json
 import time
 
-from utils.data_f import print_f, time_f, random_video_para
-from utils.push import pushplus_push
-from utils.cookie_f import formate_cookie, get_csrf
-from config import config
-from data.api import Api
-from data.post_data import PostData
+from data_f import print_f, time_f, random_video_para
+from cookie_f import formate_cookie, get_csrf
+from api import Api
+from post_data import PostData
 
+COIN_OR_NOT = True
+# 是否投币
+
+COIN_NUM = 1
+# 投币数量 -1为完成所有也就是如果你已经投过1次那就只会投4次
+# 如果不是 -1 则指定投币数量范围1-5
+
+SILVER2COIN_OR_NOT = True
+# 是否将银瓜子兑换为硬币
+
+
+STRICT_MODE = True
+# 是否开启严格模式，严格模式会保证至少5次成功投币，因为官方投币API存在缺陷，会有投币成功但是返回失败的情况
+# 默认开启严格模式，如果关闭则只会投币5次，无论成功失败，会出现少投币的情况，因为可能失败，但是不会造成浪费硬币的情况，自行选择
+NUM_MODE = False
+# 该模式与严格模式互斥,开启此模式,投币只会投COIN_NUM次,无论成功失败
+
+UID_LIST = ['473837611', '1131457022', '433587902', '2026561407', '50329118']
+# 投币UP主的ID号,如果不修改，默认将用上面这个列表里的,可以选择自己喜欢的UP主
+# 获取UID的方法见README.md
+# 新华网 人民日报 央视频  王冰冰 英雄联盟赛事
+
+COOKIE_LIST = [r"buvid3=D1ACFB1D-22B4-C45B-93AD-50972173BE9A00986infoc; b_nut=1670735100; i-wanna-go-back=-1; _uuid=733B8539-6AA6-9C17-C993-D38B34D58C2601662infoc; buvid4=56B1D2BB-52DC-648C-03DD-1D4FBDD764A002140-022121113-ikWyhF/Q7Qu8C42fqWspQg%3D%3D; fingerprint=3c13d6f122bfaccce7d307e32af43be3; buvid_fp_plain=undefined; DedeUserID=1123339696; DedeUserID__ckMd5=8f8ba19f1d2e2a88; buvid_fp=1c8b301ae73ea876d6388bac35ab4cbd; b_ut=5; CURRENT_FNVAL=4048; rpdid=|(YYllR~l~J0J'uY~kJu|JY); PVID=1; hit-new-style-dyn=0; hit-dyn-v2=1; CURRENT_QUALITY=0; innersign=0; b_lsid=4F4B4E2E_18823B71E7B; FEED_LIVE_VERSION=V_LIVE_2; header_theme_version=CLOSE; SESSDATA=97fcf565%2C1699778384%2C7f218%2A52; bili_jct=6586f7d9e69a80f4d671cf3822ce0aba; sid=ercqnbkv; home_feed_column=4; browser_resolution=1151-944"]
+# Bilibili的COOKIE获取的方法见README.md 支持多账号
 
 class Bilibili:
     """
@@ -124,7 +146,7 @@ class Bilibili:
         the sign coin video list
         """
         # uid_list = ['546195', '25876945', '287795639']
-        uid_list = config.UID_LIST
+        uid_list = UID_LIST
         headers = self.post_data.video_list_headers.value
         headers['cookie'] = ck
         get_video_list_url = self.api.get_video_list_url.value.format(random.choice(uid_list))
@@ -255,18 +277,18 @@ class Bilibili:
         self.__push_f('观看视频:完成~获得5点经验值')
 
     def insert_coin_task(self, ck, coin_num, coin_has_inserted_num):
-        if config.COIN_OR_NOT and coin_num >= 5:
+        if COIN_OR_NOT and coin_num >= 5:
             print_f('投币任务未完成,即将开始投币任务')
-            if config.COIN_NUM == -1:
+            if COIN_NUM == -1:
                 coin_count = int((50 - coin_has_inserted_num) / 10)
             else:
-                coin_count = config.COIN_NUM
+                coin_count = COIN_NUM
             print_f(f'本次投币任务数量:{coin_count}')
             success_count = 0
             fail_count = 0
             for x in range(0, coin_count):
                 job_count = 0
-                if config.STRICT_MODE:
+                if STRICT_MODE:
                     while 1:
                         coin_res = self.__do_insert_coins(ck)
                         job_count += 1
@@ -317,7 +339,7 @@ class Bilibili:
                     else:
                         self.watch_video_task(ck)
                 elif index == 2:
-                    if config.COIN_OR_NOT and coin_num >= 5:
+                    if COIN_OR_NOT and coin_num >= 5:
                         if job == 50:
                             print_f('投币任务已完成')
                             self.__push_f('每日投币:已完成~获得50点经验值')
@@ -375,7 +397,7 @@ class Bilibili:
             print_f('==========以下是直播任务==============')
             self.__push_f('=========以下是直播任务=========')
             self.__do_live_sign(ck)
-            if config.SILVER2COIN_OR_NOT and self.__inquire_live_info(ck):
+            if SILVER2COIN_OR_NOT and self.__inquire_live_info(ck):
                 # 银瓜子小于700也会跳过任务
                 self.__do_silver2coin(ck)
             else:
@@ -393,11 +415,13 @@ class Bilibili:
         """
         Entrance function
         """
-        print_f(f'成功添加{len(config.COOKIE_LIST)}个cookie,开始任务……')
-        for index, ck in enumerate(config.COOKIE_LIST):
+        print_f(f'成功添加{len(COOKIE_LIST)}个cookie,开始任务……')
+        for index, ck in enumerate(COOKIE_LIST):
             self.__push_f(f'=========这是第{index + 1}个账号=========')
             print_f(f'正在签到第{index + 1}个账号……')
-            self.__do_job(ck)
-            time.sleep(1)
-        if config.PUSH_OR_NOT:
-            pushplus_push(config.TOKEN, self.log)
+            # self.__do_job(ck)
+            # time.sleep(1)
+
+if __name__ == '__main__':
+    bilibili = Bilibili()
+    bilibili.go()
