@@ -11,6 +11,7 @@ from data_f import print_f, time_f, random_video_para
 from cookie_f import formate_cookie, get_csrf
 from api import Api
 from post_data import PostData
+from getEnv import env, env_key
 
 COIN_OR_NOT = True
 # 是否投币
@@ -33,9 +34,6 @@ UID_LIST = ['473837611', '1131457022', '433587902', '2026561407', '50329118']
 # 投币UP主的ID号,如果不修改，默认将用上面这个列表里的,可以选择自己喜欢的UP主
 # 获取UID的方法见README.md
 # 新华网 人民日报 央视频  王冰冰 英雄联盟赛事
-
-COOKIE_LIST = [r"aaa"]
-# Bilibili的COOKIE获取的方法见README.md 支持多账号
 
 class Bilibili:
     """
@@ -415,11 +413,12 @@ class Bilibili:
         """
         Entrance function
         """
-        print_f(f'成功添加{len(COOKIE_LIST)}个cookie,开始任务……')
-        for index, ck in enumerate(COOKIE_LIST):
-            self.__push_f(f'=========这是第{index + 1}个账号=========')
-            print_f(f'正在签到第{index + 1}个账号……')
-            # self.__do_job(ck)
+        # print_f(f'成功添加{len(COOKIE_LIST)}个cookie,开始任务……')
+        # for index, ck in enumerate(COOKIE_LIST):
+            # self.__push_f(f'=========这是第{index + 1}个账号=========')
+            # print_f(f'正在签到第{index + 1}个账号……')
+        ck = env_key("Bilibili_token")
+        self.__do_job(ck)
             # time.sleep(1)
 
 if __name__ == '__main__':
