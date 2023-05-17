@@ -17,7 +17,7 @@ from getEnv import env, env_key
 COIN_OR_NOT = True
 # 是否投币
 
-COIN_NUM = 1
+COIN_NUM = 5
 # 投币数量 -1为完成所有也就是如果你已经投过1次那就只会投4次
 # 如果不是 -1 则指定投币数量范围1-5
 
