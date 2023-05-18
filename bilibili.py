@@ -153,6 +153,7 @@ class Bilibili:
         if '过于频繁' in video_res:
             video_res = video_res.replace('{"code":-509,"message":"请求过于频繁，请稍后再试","ttl":1}','')
         video_res = json.loads(video_res)
+        print(video_res)
         video_list = video_res['data']['list']['vlist']
         return video_list
 
